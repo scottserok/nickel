@@ -25,6 +25,8 @@ module Nickel
         occurrences_from_recurrences_and_optional_date_span
       elsif found_wrappers_only
         occurrences_from_wrappers_only
+      elsif found_times
+        occurrences_from_times
       end
     end
 
@@ -243,10 +245,22 @@ module Nickel
       @dci.size > 0 && @dsci.size == 0 && @rci.size == 0
     end
 
+    def found_times
+      # One or more time constructs, NO date spans, NO recurrence,
+      # possible wrappers, possible time constructs, possible time spans
+      @tci.size > 0 && @dci.size == 0 && @dsci.size == 0 && @rci.size == 0
+    end
+
     def occurrences_from_dates
       @dci.each do |dindex|
         occ_base = Occurrence.new(type: :single, start_date: @constructs[dindex].date)
         create_occurrence_for_each_time_in_time_map(occ_base, dindex) { |occ| @occurrences << occ }
+      end
+    end
+
+    def occurrences_from_times
+      @tci.each do |index|
+        @occurrences << Occurrence.new(type: :single, start_time: @constructs[index].time)
       end
     end
 

@@ -28,6 +28,25 @@ describe Nickel do
       end
     end
 
+    context "when the query is 'Yes, I can play at 9am'" do
+      let(:query) { 'Yes, I can play at 9am' }
+      let(:run_date) { Time.local(2014, 2, 26) }
+
+      describe '#message' do
+        it "is 'yes I can play'" do
+          expect(n.message).to eq 'yes I can play'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is single at 9:00am on unspecified date' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_time: Nickel::ZTime.new('9'))
+          ]
+        end
+      end
+    end
+
     context "when the query is 'wake up everyday at 11am'" do
       let(:query) { 'wake up everyday at 11am' }
       let(:run_date) { Time.local(2014, 2, 26) }

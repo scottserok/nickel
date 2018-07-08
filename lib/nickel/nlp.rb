@@ -11,7 +11,8 @@ module Nickel
     attr_reader :construct_finder, :construct_interpreter
     attr_reader :occurrences, :message
 
-    def initialize(query, date_time = Time.now)
+    def initialize(query, date_time = nil)
+      date_time = Time.zone ? Time.zone.now : Time.now unless date_time
       str_time = date_time.strftime('%Y%m%dT%H%M%S')
       validate_input query, str_time
       @query = query.dup
